@@ -146,7 +146,8 @@ export default class TilingMoveHandler {
         // Also work with a window, which was maximized by GNOME natively
         // because it may have been tiled with this extension before being
         // maximized so we need to restore its size to pre-tiling.
-        this._wasMaximizedOnStart = window.maximizedHorizontally || window.maximizedVertically;
+        this._wasMaximizedOnStart = window.maximizedHorizontally &&
+            window.maximizedVertically;
 
         this._dragSprite = this._lastSprite;
         const [x, y] = this.getDragCoords();
