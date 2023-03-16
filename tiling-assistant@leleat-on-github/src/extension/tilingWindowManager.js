@@ -233,6 +233,20 @@ export class TilingWindowManager {
             );
         }
 
+        if (!maximize && window.override_constraints) {
+            const leftConstraint = newRect.x === workArea.x ?
+                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
+            const rightConstraint = newRect.x2 === workArea.x2 ?
+                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
+            const topConstraint = newRect.y === workArea.y ?
+                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
+            const bottomConstraint = newRect.y2 === workArea.y2 ?
+                Meta.WindowConstraint.MONITOR : Meta.WindowConstraint.WINDOW;
+
+            window.override_constraints(topConstraint, leftConstraint,
+                rightConstraint, bottomConstraint);
+        }
+
         // See issue #137.
         // Under some circumstances it's possible that windows will tile to the wrong
         // monitor. I can't reproduce it but I suspect that it's because of passing
@@ -319,6 +333,12 @@ export class TilingWindowManager {
                 window.get_frame_rect(),
                 Meta.SizeChange.UNMAXIMIZE
             );
+        }
+
+        if (window.override_constraints) {
+            window.override_constraints(Meta.WindowConstraint.NONE,
+                Meta.WindowConstraint.NONE, Meta.WindowConstraint.NONE,
+                Meta.WindowConstraint.NONE);
         }
 
         // userOp means that the window won't clamp to the workspace. For DND
